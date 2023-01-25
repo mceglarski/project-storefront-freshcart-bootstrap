@@ -4,6 +4,12 @@
   "newProjectRoot": "projects",
   "projects": {
     "ng-freshcard-bootstrap-theme": {
+      "i18n": {
+        "sourceLocale": "en-US",
+        "locales": {
+          "pl-PL": "src/locale/messages.pl.xlf"
+        }
+      },
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -20,6 +26,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "localize": [
+              "pl-PL"
+            ],
             "outputPath": "dist/ng-freshcard-bootstrap-theme",
             "index": "src/index.html",
             "main": "src/main.ts",
