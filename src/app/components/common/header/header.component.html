@@ -60,12 +60,13 @@
         </div>
         <div class="d-block">
           <ul class="navbar-nav">
-            <li *ngFor="let item of categoryList$ | async" class="nav-item">
+            <li *ngFor="let item of categoryList" class="nav-item">
               <a
                 class="nav-link"
                 role="button"
                 [routerLink]="['/categories/', item.id]"
-                >{{ item.name }}</a
+              >
+                {{ item.name }}</a
               >
             </li>
           </ul>

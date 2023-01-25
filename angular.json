@@ -26,7 +26,6 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "localize": ["pl-PL"],
             "outputPath": "dist/ng-freshcard-bootstrap-theme",
             "index": "src/index.html",
             "main": "src/main.ts",
