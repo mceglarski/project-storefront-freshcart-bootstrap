@@ -1,1 +1,31 @@
-<h1>Home sweet home</h1>
+<section class="my-lg-14 my-8">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="mb-8">
+          <h3 class="mb-0" i18n>Shop by category</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xxl-6 g-6">
+      <div class="col mt-4" *ngFor="let category of categoryList$ | async">
+        <a
+          class="text-decoration-none text-inherit"
+          [routerLink]="['/categories/', category.id]"
+        >
+          <div class="card card-product">
+            <div class="card-body text-center py-8">
+              <img
+                class="mb-3 img-fluid"
+                [src]="category.imageUrl"
+                [alt]="category.name"
+              />
+              <div class="text-truncate">{{ category.name }}</div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
