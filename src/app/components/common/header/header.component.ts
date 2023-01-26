@@ -1,9 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { CategoryModel } from '../../../models/category.model';
 
 @Component({
@@ -16,4 +12,15 @@ import { CategoryModel } from '../../../models/category.model';
 export class HeaderComponent {
   @Input()
   public categoryList: CategoryModel[] | null = [];
+
+  private _collapseNavigation: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public collapseNavigation$: Observable<boolean> = this._collapseNavigation.asObservable();
+
+  public showCollapsedNavigation(): void {
+    this._collapseNavigation.next(true);
+  }
+
+  public hideCollapsedNavigation(): void {
+    this._collapseNavigation.next(false);
+  }
 }
