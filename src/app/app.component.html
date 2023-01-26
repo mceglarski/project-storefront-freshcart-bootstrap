@@ -1,1 +1,6 @@
+<app-header [categoryList]="categoryList$ | async"> </app-header>
 <router-outlet></router-outlet>
+<app-footer
+  [categoryList]="categoryList$ | async"
+  [storeList]="storeList$ | async"
+></app-footer>

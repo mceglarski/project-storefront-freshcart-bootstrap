@@ -4,6 +4,12 @@
   "newProjectRoot": "projects",
   "projects": {
     "ng-freshcard-bootstrap-theme": {
+      "i18n": {
+        "sourceLocale": "en-US",
+        "locales": {
+          "pl-PL": "src/locale/messages.pl.xlf"
+        }
+      },
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -31,9 +37,12 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/bootstrap/dist/css/bootstrap.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.js"
+            ]
           },
           "configurations": {
             "production": {
