@@ -5,6 +5,8 @@ import { StoreModel } from '../models/store.model';
 
 const STORE_URL: string =
   'https://6384fca14ce192ac60696c4b.mockapi.io/freshcart-stores/';
+const STORE_TAGS_URL: string =
+  'https://6384fca14ce192ac60696c4b.mockapi.io/freshcart-store-tags/';
 
 @Injectable()
 export class StoreService {
@@ -17,4 +19,6 @@ export class StoreService {
   public getOne(id: string): Observable<StoreModel> {
     return this._httpClient.get<StoreModel>(STORE_URL + id);
   }
+
+
 }
