@@ -1,10 +1,15 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { HomeComponent } from './home.component';
 import { CommonModule } from '@angular/common';
+import { CategoryListComponentModule } from './category-list/category-list.component-module';
+import { StoreListComponentModule } from './store-list/store-list.component-module';
 
 @NgModule({
-  imports: [RouterModule, CommonModule],
+  imports: [
+    CommonModule,
+    CategoryListComponentModule,
+    StoreListComponentModule,
+  ],
   declarations: [HomeComponent],
   providers: [],
   exports: [HomeComponent],
