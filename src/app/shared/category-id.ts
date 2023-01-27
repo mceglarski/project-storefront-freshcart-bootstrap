@@ -1,0 +1,10 @@
+export enum CategoryId {
+  DAIRY_BREAD_EGGS = '1',
+  SNACK_MUNCHIES = '2',
+  BAKERY_BISCUITS = '3',
+  TEA_COFFEE_DRINKS = '4',
+  FRUITS_VEGETABLES = '5',
+  COLD_DRINKS_JUICES = '6',
+  CHICKEN_MEAT_FISH = '7',
+  INSTANT_FOOD = '8'
+}
