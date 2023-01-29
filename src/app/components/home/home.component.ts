@@ -51,7 +51,7 @@ export class HomeComponent {
       id: store.id,
       name: store.name,
       logoUrl: store.logoUrl,
-      distance: Math.round(store.distanceInMeters / 100) / 10,
+      distance: store.distanceInMeters,
       storeTags: store.tagIds.map((tag) => tagMap[tag]?.name),
     }));
   }
