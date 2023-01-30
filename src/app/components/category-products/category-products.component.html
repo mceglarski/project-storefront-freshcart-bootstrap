@@ -9,6 +9,7 @@
           aria-labelledby="offcanvasCategoryLabel"
         >
           <div class="offcanvas-body ps-lg-2 pt-lg-0">
+            <!-- categories  -->
             <div class="mb-8">
               <h5 class="mb-3" i18n>Categories</h5>
               <ul class="nav nav-category" id="categoryCollapseMenu">
@@ -28,6 +29,26 @@
                   ></a>
                 </li>
               </ul>
+            </div>
+            <!-- price filter  -->
+            <div class="mb-8" [formGroup]="filterByPriceFormGroup">
+              <h5 class="mb-3">Price</h5>
+              <div class="mb-3">
+                <input
+                  class="form-control"
+                  type="number"
+                  placeholder="Price From"
+                  [formControlName]="'priceFrom'"
+                />
+              </div>
+              <div class="mb-3">
+                <input
+                  class="form-control"
+                  type="number"
+                  placeholder="Price To"
+                  [formControlName]="'priceTo'"
+                />
+              </div>
             </div>
           </div>
         </div>
