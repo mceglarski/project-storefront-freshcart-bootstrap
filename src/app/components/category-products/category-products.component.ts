@@ -7,6 +7,8 @@ import { CategoryService } from '../../services/category.service';
 import { ActivatedRoute, Params } from '@angular/router';
 import { map, Observable, shareReplay, combineLatest } from 'rxjs';
 import { CategoryModel } from '../../models/category.model';
+import { ProductModel } from '../../models/product.model';
+import { ProductService } from '../../services/product.service';
 
 @Component({
   selector: 'app-category-products',
@@ -27,8 +29,28 @@ export class CategoryProductsComponent {
     )
   );
 
+  public readonly productList$: Observable<ProductModel[]> = combineLatest([
+    this._productService.getAll(),
+    this._activatedRoute.params,
+  ]).pipe(
+    map(([products, params]: [ProductModel[], Params]) =>
+      products.filter((product) => product.categoryId === params['categoryId'])
+    )
+  );
+
   constructor(
     private _categoryService: CategoryService,
+    private _productService: ProductService,
     private _activatedRoute: ActivatedRoute
   ) {}
+
+  public getStarClass(rating: number, starIndex: number): string {
+    if (rating >= starIndex) {
+      return 'bi-star-fill';
+    }
+    if (rating + 1 > starIndex && rating % 1 !== 0) {
+      return 'bi-star-half';
+    }
+    return 'bi-star';
+  }
 }
