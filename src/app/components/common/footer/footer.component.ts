@@ -17,9 +17,9 @@ import { Observable, of } from 'rxjs';
 })
 export class FooterComponent {
   @Input()
-  public categoryList: CategoryModel[] | null = [];
+  public categoryList: CategoryModel[] = [];
   @Input()
-  public storeList: StoreModel[] | null = [];
+  public storeList: StoreModel[] = [];
 
   public readonly getToKnowUsList$: Observable<string[]> = of([
     'Company',

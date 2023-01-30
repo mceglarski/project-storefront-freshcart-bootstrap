@@ -11,7 +11,7 @@ import { CategoryModel } from '../../../models/category.model';
 })
 export class HeaderComponent {
   @Input()
-  public categoryList: CategoryModel[] | null = [];
+  public categoryList: CategoryModel[] = [];
 
   private _collapseNavigation: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public collapseNavigation$: Observable<boolean> = this._collapseNavigation.asObservable();

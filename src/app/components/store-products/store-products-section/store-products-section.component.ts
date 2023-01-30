@@ -15,5 +15,5 @@ import { ProductModel } from '../../../models/product.model';
 })
 export class StoreProductsSectionComponent {
   @Input()
-  public productList: ProductModel[] | null = [];
+  public productList: ProductModel[] = [];
 }
