@@ -51,6 +51,25 @@
                 Products found
               </p>
             </div>
+
+            <div class="d-md-flex justify-content-between align-items-center">
+              <div class="d-flex mt-2 mt-lg-0">
+                <div>
+                  <!-- select sort option -->
+                  <select
+                    class="form-select"
+                    (change)="sort($any($event.target).value)"
+                  >
+                    <option
+                      *ngFor="let order of ordersList$ | async"
+                      [value]="order"
+                    >
+                      {{ order }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="row g-4 row-cols-1 mt-2">
