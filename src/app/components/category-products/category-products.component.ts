@@ -12,12 +12,15 @@ import {
   combineLatest,
   of,
   BehaviorSubject,
+  startWith,
 } from 'rxjs';
 import { CategoryModel } from '../../models/category.model';
 import { ProductModel } from '../../models/product.model';
 import { ProductService } from '../../services/product.service';
 import { ProductsSortOption } from '../../shared/products-sort-option';
 import { PaginationQueryModel } from '../../query-models/pagination.query-model';
+import { FormControl, FormGroup } from '@angular/forms';
+import { FilterPriceQueryModel } from '../../query-models/filter-price.query-model';
 
 @Component({
   selector: 'app-category-products',
@@ -27,6 +30,14 @@ import { PaginationQueryModel } from '../../query-models/pagination.query-model'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoryProductsComponent {
+  public readonly filterByPriceFormGroup: FormGroup = new FormGroup({
+    priceFrom: new FormControl(),
+    priceTo: new FormControl(),
+  });
+  public readonly filterByPrice$: Observable<FilterPriceQueryModel> =
+    this.filterByPriceFormGroup.valueChanges.pipe(
+      startWith({ priceFrom: 0, priceTo: 1000000 })
+    );
   public readonly categoryList$: Observable<CategoryModel[]> =
     this._categoryService.getAll().pipe(shareReplay(1));
   public readonly currentCategory$: Observable<CategoryModel> = combineLatest([
@@ -66,9 +77,21 @@ export class CategoryProductsComponent {
       this._productService.getAll(),
       this._activatedRoute.params,
       this.order$,
+      this.filterByPrice$,
     ]).pipe(
-      map(([products, params, order]: [ProductModel[], Params, string]) =>
-        this._getSortedProductsByCategory(products, params['categoryId'], order)
+      map(
+        ([products, params, order, filterPrice]: [
+          ProductModel[],
+          Params,
+          string,
+          FilterPriceQueryModel
+        ]) =>
+          this._getFilteredSortedProductsByCategory(
+            products,
+            params['categoryId'],
+            order,
+            filterPrice
+          )
       ),
       shareReplay(1)
     );
@@ -154,13 +177,20 @@ export class CategoryProductsComponent {
     return products.slice(paginationSliceStart, paginationSliceEnd);
   }
 
-  private _getSortedProductsByCategory(
+  private _getFilteredSortedProductsByCategory(
     products: ProductModel[],
     categoryId: string,
-    order: string
+    order: string,
+    filterPrice: FilterPriceQueryModel
   ): ProductModel[] {
+    const priceFrom = filterPrice.priceFrom ?? 0;
+    const priceTo = filterPrice.priceTo ?? 1000000;
+    console.log(filterPrice, priceFrom, priceTo);
     return products
       .filter((product) => product.categoryId === categoryId)
+      .filter(
+        (product) => product.price >= priceFrom && product.price <= priceTo
+      )
       .sort((a, b) => {
         return this._sortProductList(a, b, order);
       });
