@@ -19,7 +19,7 @@
             <div class="card-body text-center py-8">
               <img
                 class="mb-3 img-fluid"
-                [src]="category.imageUrl"
+                [src]="category.imageUrl | slice:1"
                 [alt]="category.name"
               />
               <div class="text-truncate">{{ category.name }}</div>
