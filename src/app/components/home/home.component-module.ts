@@ -3,9 +3,7 @@ import { HomeComponent } from './home.component';
 import { CommonModule } from '@angular/common';
 import { CategoryListComponentModule } from './category-list/category-list.component-module';
 import { StoreListComponentModule } from './store-list/store-list.component-module';
-import {
-  FeaturedCategoriesListComponentModule
-} from "./featured-categories-list/featured-categories-list.component-module";
+import { FeaturedCategoriesListComponentModule } from './featured-categories-list/featured-categories-list.component-module';
 
 @NgModule({
   imports: [

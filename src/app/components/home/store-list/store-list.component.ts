@@ -15,5 +15,5 @@ import { StoreWithTagsQueryModel } from '../../../query-models/store-with-tags.q
 })
 export class StoreListComponent {
   @Input()
-  public storeWithTagsList: StoreWithTagsQueryModel[] | null = [];
+  public storeWithTagsList: StoreWithTagsQueryModel[] = [];
 }

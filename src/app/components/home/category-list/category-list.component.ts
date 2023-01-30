@@ -10,5 +10,5 @@ import {CategoryModel} from "../../../models/category.model";
 })
 export class CategoryListComponent {
   @Input()
-  public categoryList: CategoryModel[] | null = [];
+  public categoryList: CategoryModel[] = [];
 }
