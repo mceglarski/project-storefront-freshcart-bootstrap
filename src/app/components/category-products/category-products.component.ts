@@ -77,16 +77,21 @@ export class CategoryProductsComponent {
       shareReplay(1)
     );
 
+  public storeFilterName: FormControl = new FormControl('');
   public storeFilterFormGroup: FormGroup = new FormGroup({});
-  public readonly storeList$: Observable<StoreModel[]> = this._storeService
-    .getAll()
-    .pipe(
-      tap((stores) => {
-        stores.forEach((store) =>
-          this.storeFilterFormGroup.addControl(store.id, new FormControl(false))
-        );
-      })
-    );
+  public readonly storeList$: Observable<StoreModel[]> = combineLatest([
+    this._storeService.getAll(),
+    this.storeFilterName.valueChanges.pipe(startWith('')),
+  ]).pipe(
+    map(([stores, storeName]: [StoreModel[], string]) => {
+      stores.forEach((store) =>
+        this.storeFilterFormGroup.addControl(store.id, new FormControl(false))
+      );
+      return stores.filter((store) =>
+        store.name.toLowerCase().includes(storeName.toLowerCase())
+      );
+    })
+  );
 
   public readonly filteredSortedProductList$: Observable<ProductModel[]> =
     combineLatest([
