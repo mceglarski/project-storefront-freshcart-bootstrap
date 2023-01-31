@@ -34,6 +34,7 @@ export class CategoryProductsComponent {
     priceFrom: new FormControl(),
     priceTo: new FormControl(),
   });
+  public readonly filterByRatingControl: FormControl = new FormControl();
   public readonly filterByPrice$: Observable<FilterPriceQueryModel> =
     this.filterByPriceFormGroup.valueChanges.pipe(
       startWith({ priceFrom: 0, priceTo: 1000000 })
@@ -78,19 +79,22 @@ export class CategoryProductsComponent {
       this._activatedRoute.params,
       this.order$,
       this.filterByPrice$,
+      this.filterByRatingControl.valueChanges.pipe(startWith(-1)),
     ]).pipe(
       map(
-        ([products, params, order, filterPrice]: [
+        ([products, params, order, filterPrice, rating]: [
           ProductModel[],
           Params,
           string,
-          FilterPriceQueryModel
+          FilterPriceQueryModel,
+          number
         ]) =>
           this._getFilteredSortedProductsByCategory(
             products,
             params['categoryId'],
             order,
-            filterPrice
+            filterPrice,
+            rating
           )
       ),
       shareReplay(1)
@@ -181,19 +185,39 @@ export class CategoryProductsComponent {
     products: ProductModel[],
     categoryId: string,
     order: string,
-    filterPrice: FilterPriceQueryModel
+    filterPrice: FilterPriceQueryModel,
+    rating: number
   ): ProductModel[] {
     const priceFrom = filterPrice.priceFrom ?? 0;
     const priceTo = filterPrice.priceTo ?? 1000000;
-    console.log(filterPrice, priceFrom, priceTo);
     return products
-      .filter((product) => product.categoryId === categoryId)
-      .filter(
-        (product) => product.price >= priceFrom && product.price <= priceTo
-      )
+      .filter((product) => this._filterProductCategory(product, categoryId))
+      .filter((product) => this._filterByPrice(product, priceFrom, priceTo))
+      .filter((product) => this._filterByRating(product, rating))
       .sort((a, b) => {
         return this._sortProductList(a, b, order);
       });
+  }
+
+  private _filterProductCategory(
+    product: ProductModel,
+    categoryId: string
+  ): boolean {
+    return product.categoryId === categoryId;
+  }
+
+  private _filterByPrice(
+    product: ProductModel,
+    priceFrom: number,
+    priceTo: number
+  ): boolean {
+    return product.price >= priceFrom && product.price <= priceTo;
+  }
+
+  private _filterByRating(product: ProductModel, rating: number): boolean {
+    return rating !== -1
+      ? product.ratingValue >= rating && product.ratingValue < rating + 1
+      : true;
   }
 
   private _sortProductList(
