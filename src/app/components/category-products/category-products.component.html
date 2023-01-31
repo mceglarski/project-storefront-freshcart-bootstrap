@@ -30,9 +30,29 @@
                 </li>
               </ul>
             </div>
+            <!-- store filter  -->
+            <div class="mb-8" *ngIf="storeList$ | async as storeList">
+              <h5 i18n>Stores</h5>
+              <div class="form-check mb-2" [formGroup]="storeFilterFormGroup">
+                <!-- checkbox input -->
+                <div *ngFor="let store of storeList">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    [value]="store.id"
+                    [id]="store.id"
+                    [formControlName]="store.id"
+                  />
+                  <label class="form-check-label" [for]="store.id">
+                    {{ store.name }}
+                  </label>
+                </div>
+              </div>
+            </div>
+
             <!-- price filter  -->
             <div class="mb-8" [formGroup]="filterByPriceFormGroup">
-              <h5 class="mb-3">Price</h5>
+              <h5 class="mb-3" i18n>Price</h5>
               <div class="mb-3">
                 <input
                   class="form-control"

@@ -13,6 +13,7 @@ import {
   of,
   BehaviorSubject,
   startWith,
+  tap,
 } from 'rxjs';
 import { CategoryModel } from '../../models/category.model';
 import { ProductModel } from '../../models/product.model';
@@ -21,6 +22,9 @@ import { ProductsSortOption } from '../../shared/products-sort-option';
 import { PaginationQueryModel } from '../../query-models/pagination.query-model';
 import { FormControl, FormGroup } from '@angular/forms';
 import { FilterPriceQueryModel } from '../../query-models/filter-price.query-model';
+import { StoreModel } from '../../models/store.model';
+import { StoreService } from '../../services/store.service';
+import { FilterStoresQueryModel } from '../../query-models/filter-stores.query-model';
 
 @Component({
   selector: 'app-category-products',
@@ -61,8 +65,8 @@ export class CategoryProductsComponent {
     ProductsSortOption.AVERAGE_RATING,
   ]);
 
-  public pageSize$: Observable<number[]> = of([5, 10, 15]);
-  public paginationQueryParams$: Observable<PaginationQueryModel> =
+  public readonly pageSize$: Observable<number[]> = of([5, 10, 15]);
+  public readonly paginationQueryParams$: Observable<PaginationQueryModel> =
     this._activatedRoute.queryParams.pipe(
       map((params: Params) => {
         return {
@@ -73,6 +77,17 @@ export class CategoryProductsComponent {
       shareReplay(1)
     );
 
+  public storeFilterFormGroup: FormGroup = new FormGroup({});
+  public readonly storeList$: Observable<StoreModel[]> = this._storeService
+    .getAll()
+    .pipe(
+      tap((stores) => {
+        stores.forEach((store) =>
+          this.storeFilterFormGroup.addControl(store.id, new FormControl(false))
+        );
+      })
+    );
+
   public readonly filteredSortedProductList$: Observable<ProductModel[]> =
     combineLatest([
       this._productService.getAll(),
@@ -80,21 +95,24 @@ export class CategoryProductsComponent {
       this.order$,
       this.filterByPrice$,
       this.filterByRatingControl.valueChanges.pipe(startWith(-1)),
+      this.storeFilterFormGroup.valueChanges.pipe(startWith({})),
     ]).pipe(
       map(
-        ([products, params, order, filterPrice, rating]: [
+        ([products, params, order, filterPrice, rating, stores]: [
           ProductModel[],
           Params,
           string,
           FilterPriceQueryModel,
-          number
+          number,
+          FilterStoresQueryModel
         ]) =>
           this._getFilteredSortedProductsByCategory(
             products,
             params['categoryId'],
             order,
             filterPrice,
-            rating
+            rating,
+            stores
           )
       ),
       shareReplay(1)
@@ -124,6 +142,7 @@ export class CategoryProductsComponent {
   constructor(
     private _categoryService: CategoryService,
     private _productService: ProductService,
+    private _storeService: StoreService,
     private _activatedRoute: ActivatedRoute,
     private _router: Router
   ) {}
@@ -186,14 +205,19 @@ export class CategoryProductsComponent {
     categoryId: string,
     order: string,
     filterPrice: FilterPriceQueryModel,
-    rating: number
+    rating: number,
+    stores: FilterStoresQueryModel
   ): ProductModel[] {
+    const checkedStoresArray = Object.keys(stores).filter(
+      (store) => stores[store] === true
+    );
     const priceFrom = filterPrice.priceFrom ?? 0;
     const priceTo = filterPrice.priceTo ?? 1000000;
     return products
       .filter((product) => this._filterProductCategory(product, categoryId))
       .filter((product) => this._filterByPrice(product, priceFrom, priceTo))
       .filter((product) => this._filterByRating(product, rating))
+      .filter((product) => this._filterByStore(product, checkedStoresArray))
       .sort((a, b) => {
         return this._sortProductList(a, b, order);
       });
@@ -217,6 +241,15 @@ export class CategoryProductsComponent {
   private _filterByRating(product: ProductModel, rating: number): boolean {
     return rating !== -1
       ? product.ratingValue >= rating && product.ratingValue < rating + 1
+      : true;
+  }
+
+  private _filterByStore(
+    product: ProductModel,
+    checkedStoresArray: string[]
+  ): boolean {
+    return checkedStoresArray.length > 0
+      ? product.storeIds.some((r) => checkedStoresArray.includes(r))
       : true;
   }
 
