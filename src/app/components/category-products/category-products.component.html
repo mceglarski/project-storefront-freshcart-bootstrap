@@ -50,6 +50,38 @@
                 />
               </div>
             </div>
+            <!-- rating filter  -->
+            <div class="mb-8">
+              <h5 class="mb-3" i18n>Rating</h5>
+              <div>
+                <div
+                  class="form-check mb-2"
+                  *ngFor="let starInput of [5, 4, 3, 2, 1]"
+                >
+                  <!-- input -->
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    [formControl]="filterByRatingControl"
+                    [value]="starInput"
+                    id="ratingFive"
+                  />
+                  <i
+                    *ngFor="let star of [1, 2, 3, 4, 5]"
+                    class="bi text-warning"
+                    [ngClass]="getStarClass(starInput, star)"
+                  ></i>
+                </div>
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  [formControl]="filterByRatingControl"
+                  [value]="-1"
+                  id="clear"
+                />
+                <i i18n> All ratings </i>
+              </div>
+            </div>
           </div>
         </div>
       </aside>
