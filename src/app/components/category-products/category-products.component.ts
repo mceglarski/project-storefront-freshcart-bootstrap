@@ -6,14 +6,13 @@ import {
 import { CategoryService } from '../../services/category.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import {
+  BehaviorSubject,
+  combineLatest,
   map,
   Observable,
-  shareReplay,
-  combineLatest,
   of,
-  BehaviorSubject,
+  shareReplay,
   startWith,
-  tap,
 } from 'rxjs';
 import { CategoryModel } from '../../models/category.model';
 import { ProductModel } from '../../models/product.model';
@@ -34,6 +33,7 @@ import { FilterStoresQueryModel } from '../../query-models/filter-stores.query-m
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoryProductsComponent {
+
   public readonly filterByPriceFormGroup: FormGroup = new FormGroup({
     priceFrom: new FormControl(),
     priceTo: new FormControl(),
@@ -43,6 +43,7 @@ export class CategoryProductsComponent {
     this.filterByPriceFormGroup.valueChanges.pipe(
       startWith({ priceFrom: 0, priceTo: 1000000 })
     );
+
   public readonly categoryList$: Observable<CategoryModel[]> =
     this._categoryService.getAll().pipe(shareReplay(1));
   public readonly currentCategory$: Observable<CategoryModel> = combineLatest([
@@ -79,6 +80,7 @@ export class CategoryProductsComponent {
 
   public storeFilterName: FormControl = new FormControl('');
   public storeFilterFormGroup: FormGroup = new FormGroup({});
+
   public readonly storeList$: Observable<StoreModel[]> = combineLatest([
     this._storeService.getAll(),
     this.storeFilterName.valueChanges.pipe(startWith('')),
